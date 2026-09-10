@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Vari Raksha AI - Rice Crop Disease Detection',
+  description: 'AI-powered rice crop disease detection. Upload a rice leaf image and get instant AI-based disease predictions.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -23,14 +23,19 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
+  keywords: ['rice', 'disease detection', 'agriculture', 'AI', 'crop health'],
+  openGraph: {
+    title: 'Vari Raksha AI - Rice Crop Disease Detection',
+    description: 'AI-powered rice crop disease detection for farmers',
+    type: 'website',
+  },
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light dark',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
+  colorScheme: 'light',
+  themeColor: '#14532D',
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({
