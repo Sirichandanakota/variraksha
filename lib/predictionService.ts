@@ -142,7 +142,9 @@ export const DISEASE_INFO: Record<
   },
 }
 
-interface PredictionResult {
+export const LOW_CONFIDENCE_THRESHOLD = 0.6
+
+export interface PredictionResult {
   disease: string
   confidence: number
   isLowConfidence: boolean
@@ -182,8 +184,8 @@ async function predictFromBackend(
     return {
       disease: data.disease || 'Unknown',
       confidence: data.confidence || 0,
-      isLowConfidence: (data.confidence || 0) < 0.6,
-      isInvalid: false,
+      isLowConfidence: (data.confidence || 0) < LOW_CONFIDENCE_THRESHOLD,
+      isInvalid: Boolean(data.isInvalid),
     }
   } catch (error) {
     console.error('Backend prediction failed, falling back to mock:', error)
@@ -192,7 +194,10 @@ async function predictFromBackend(
 }
 
 function mockPredict(imageFile: File): PredictionResult {
-  if (!imageFile.type.startsWith('image/')) {
+  const fileName = imageFile.name.toLowerCase()
+  const looksUnusable = /(invalid|unrelated|animal|person|blurry|blur|dark|unclear|non[-_ ]?rice)/i.test(fileName)
+
+  if (!imageFile.type.startsWith('image/') || looksUnusable) {
     return {
       disease: 'Invalid',
       confidence: 0,
@@ -201,7 +206,6 @@ function mockPredict(imageFile: File): PredictionResult {
     }
   }
 
-  const fileName = imageFile.name.toLowerCase()
   let diseaseIndex = 0
 
   for (let i = 0; i < fileName.length; i++) {
@@ -214,7 +218,7 @@ function mockPredict(imageFile: File): PredictionResult {
   return {
     disease,
     confidence: Math.round(confidence * 1000) / 1000,
-    isLowConfidence: confidence < 0.6,
+    isLowConfidence: confidence < LOW_CONFIDENCE_THRESHOLD,
     isInvalid: false,
   }
 }
