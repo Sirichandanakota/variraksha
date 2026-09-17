@@ -69,6 +69,7 @@
   }
   html {
     @apply bg-background;
+    scroll-behavior: smooth;
   }
 }
 

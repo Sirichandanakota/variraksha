@@ -185,7 +185,7 @@ async function predictFromBackend(
       disease: data.disease || 'Unknown',
       confidence: data.confidence || 0,
       isLowConfidence: (data.confidence || 0) < LOW_CONFIDENCE_THRESHOLD,
-      isInvalid: Boolean(data.isInvalid),
+      isInvalid: Boolean(data.isInvalid || data.invalid || data.valid === false),
     }
   } catch (error) {
     console.error('Backend prediction failed, falling back to mock:', error)
@@ -195,7 +195,7 @@ async function predictFromBackend(
 
 function mockPredict(imageFile: File): PredictionResult {
   const fileName = imageFile.name.toLowerCase()
-  const looksUnusable = /(invalid|unrelated|animal|person|blurry|blur|dark|unclear|non[-_ ]?rice)/i.test(fileName)
+  const looksUnusable = /(invalid|unrelated|animal|person|dog|cat|bird|car|object|flower|selfie|face|blurry|blur|dark|unclear|non[-_ ]?rice)/i.test(fileName)
 
   if (!imageFile.type.startsWith('image/') || looksUnusable) {
     return {
